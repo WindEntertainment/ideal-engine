@@ -35,7 +35,7 @@ runs:
       if: env.os == 'windows-latest'
       shell: powershell
       run: |
-        choco install make puthon cmake 7zip yq llvm emscripten --quiet
+        choco install make python cmake 7zip yq llvm emscripten --quiet
 
     - name: Install Emscripten SDK Linux
       if: env.os == 'ubuntu-latest'
