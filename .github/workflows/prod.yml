@@ -144,7 +144,6 @@ jobs:
       - name: Cpack build
         shell: bash
         run: |
-          wm run conan-deploy
           wm run cpack-build -bt ${{ env.conanBuildType }}
           mv $(pwd)/releases/wind.zip $(pwd)/releases/${{matrix.config.os}}.zip
 
