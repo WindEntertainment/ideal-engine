@@ -6,7 +6,7 @@ message("Building with CMake version: ${CMAKE_VERSION}")
 message("WASM: ${BUILD_WASM}")
 message("Output type: ${OUTPUT_TYPE}")
 
-include(${CMAKE_SOURCE_DIR}/cmake/utils.cmake)
+include(${CMAKE_SOURCE_DIR}/wind.cmake)
 
 ###===================================================================================##
 

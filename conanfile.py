@@ -11,18 +11,19 @@ class MyConanFile(ConanFile):
   generators = "CMakeDeps", "CMakeToolchain"
   exports_sources = "*"
 
-  options = {
-   
-  }
-
-  default_options = {
-    "fmt/*:header_only": True,
-  }
-
   def requirements(self):
     self.requires("sdl/2.30.8")
     self.requires("catch2/3.7.1")
-    self.requires("fmt/11.0.2")
+    self.requires("spdlog/1.13.0")
+    
+    self.requires("cxxopts/3.1.1")
+    self.requires("pugixml/1.13")
+    self.requires("yaml-cpp/0.8.0")
+    self.requires("stb/cci.20220909")
+    self.requires("zlib/1.2.11")
+
+    self.requires("glad/0.1.36")
+    self.requires("glm/cci.20230113")
 
   def build(self):
     cmake = CMake(self)
