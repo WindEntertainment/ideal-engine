@@ -35,6 +35,8 @@ runs:
       if: env.os == 'windows-latest'
       shell: powershell
       run: |
+        choco clean
+
         choco upgrade chocolatey
         choco install python
         choco install make cmake 7zip yq llvm emscripten --quiet
