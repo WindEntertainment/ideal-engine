@@ -11,10 +11,6 @@ class MyConanFile(ConanFile):
   generators = "CMakeDeps", "CMakeToolchain"
   exports_sources = "*"
 
-  options = {
-   
-  }
-
   default_options = {
     "fmt/*:header_only": True,
   }
