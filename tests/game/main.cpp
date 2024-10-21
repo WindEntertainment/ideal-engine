@@ -1,15 +1,14 @@
-#define BOOST_TEST_MODULE native
-#include <boost/test/included/unit_test.hpp>
+#include <catch2/catch_test_macros.hpp>
 
-int add(int a, int b) {
-  return a + b;
+#include <cstdint>
+
+uint32_t factorial( uint32_t number ) {
+    return number <= 1 ? number : factorial(number-1) * number;
 }
 
-BOOST_AUTO_TEST_CASE(test_addition) {
-  BOOST_CHECK(add(2, 2) == 4);
-  BOOST_CHECK(add(-1, 1) == 0);
-}
-
-BOOST_AUTO_TEST_CASE(test_failure) {
-  BOOST_CHECK(add(2, 3) != 4);
+TEST_CASE( "Factorials are computed", "[factorial]" ) {
+    REQUIRE( factorial( 1) == 1 );
+    REQUIRE( factorial( 2) == 2 );
+    REQUIRE( factorial( 3) == 6 );
+    REQUIRE( factorial(10) == 3'628'800 );
 }

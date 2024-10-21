@@ -24,3 +24,5 @@ emcc-cache
 /.cache/
 !/.github/**
 !/.vscode/**
+
+coverage

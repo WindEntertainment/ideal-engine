@@ -28,12 +28,23 @@ wm run cmake-configure --build-type Debug --with-testing
 
 cd "$root/build/app/build/Debug/tests" || exit
 
-make
+if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+  cmake --build "$root/build/app/build/Debug" --config Debug --parallel 10 --target "native-tests" --verbose
+else
+  cmake --build "$root/build/app/build/Debug" --parallel 10 --target "native-tests" --verbose
+fi
+
 ctest
 
 if [[ $with_coverage = true ]]; then
   cd "../" || exit
-  make coverage
+
+  if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+    cmake --build "$root/build/app/build/Debug" --config Debug --parallel 10 --target "coverage" --verbose
+  else
+    cmake --build "$root/build/app/build/Debug" --parallel 10 --target "coverage" --verbose
+  fi
+
 fi
 
 cd "$root" || exit

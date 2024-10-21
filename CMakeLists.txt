@@ -5,7 +5,6 @@ project(wind)
 message("Building with CMake version: ${CMAKE_VERSION}")
 message("WASM: ${BUILD_WASM}")
 message("Output type: ${OUTPUT_TYPE}")
-message(".Net: ${BUILD_DOTNET}")
 
 include(${CMAKE_SOURCE_DIR}/cmake/utils.cmake)
 

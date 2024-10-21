@@ -16,7 +16,6 @@ while [[ "$#" -gt 0 ]]; do
     -sc|--skip-configure) skip_configure=true; ;;
     -bt|--build-type) build_type="$2"; shift ;;
     -wt|--with-testing) flags+=("-wt"); ;;
-    -wd|--with-dotnet) flags+=("-wd"); ;;
     -w|--wasm) wasm=true; flags+=("-w"); ;;
     -t|--target) target="$2"; shift ;;
     --root) root="$2"; shift ;;
