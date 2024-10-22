@@ -1,6 +1,16 @@
-#include <iostream>
+#include "window/window.h"
 
-int main() {
-  std::cout << "Hello, World!" << std::endl;
+int main(int argc, char** argv) {
+  auto window = wind::Window::create([](wind::Window::Config* self) {
+    self->title = "Hello, World!";
+  });
+
+  while (true) { 
+    window->update();
+    window->show();
+  }
+
+  window->close();
+
   return 0;
 }
