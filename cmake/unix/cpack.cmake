@@ -9,10 +9,4 @@ foreach(conan_file ${CONAN_FILES})
   install(FILES ${conan_file} DESTINATION .)
 endforeach()
 
-file(GLOB_RECURSE CSHARP_FILES "engine/bin/Release/app/*/publish/*.dll")
-foreach(csharp_file ${CSHARP_FILES})
-  message(${csharp_file})
-  install(FILES ${csharp_file} DESTINATION .)
-endforeach()
-
 include(CPack)

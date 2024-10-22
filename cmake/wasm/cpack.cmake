@@ -9,15 +9,4 @@ foreach(conan_file ${CONAN_FILES})
   install(FILES ${conan_file} DESTINATION .)
 endforeach()
 
-install(
-  DIRECTORY "engine/bin/Release/web/net8.0/publish"
-  DESTINATION .
-  FILES_MATCHING
-    PATTERN "*.wasm"
-    PATTERN "*.html"
-    PATTERN "*.js"
-    PATTERN "*.css"
-    PATTERN "*.json"
-)
-
 include(CPack)

@@ -6,7 +6,7 @@ message("Building with CMake version: ${CMAKE_VERSION}")
 message("WASM: ${BUILD_WASM}")
 message("Output type: ${OUTPUT_TYPE}")
 
-include(${CMAKE_SOURCE_DIR}/wind.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/wind.cmake)
 
 ###===================================================================================##
 
@@ -19,9 +19,12 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 ###===================================================================================##
 
-import(executable OFF)
+add_subdirectory(./game/)
+add_subdirectory(./engine/)
+
+###===================================================================================##
+
 import(compiler ON)
-import(dependencies OFF)
 
 ###===================================================================================##
 

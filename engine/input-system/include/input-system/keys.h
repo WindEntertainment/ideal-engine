@@ -266,7 +266,7 @@ enum class Keycode {
 };
 
 struct Key {
-  Keycode keycode = Keycode::KEY_UNKNOWN;
+  Keycode keycode = Keycode::Unknown;
   KeyAction action = KeyAction::Unknown;
 
   bool operator==(const Key& key) const {

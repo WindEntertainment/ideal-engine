@@ -1,16 +1,15 @@
 #pragma once
+#include <utils/includes.h>
+
 #include "context.h"
 #include "input-system/trigger.h"
 #include "keys.h"
-#include "utils/includes.h"
-#include <GLFW/glfw3.h>
-#include <vector>
 
 namespace wind {
 
 class InputSystem {
 public:
-  static void init(GLFWwindow* window);
+  // static void init(GLFWwindow* window);
 
   static void createTriggersFromFile(std::filesystem::path path);
 

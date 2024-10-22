@@ -3,16 +3,7 @@
 #include "input-system/context.h"
 #include "input-system/keys.h"
 #include "input-system/trigger.h"
-#include "utils/includes.h"
 #include "utils/utils.h"
-#include <GLFW/glfw3.h>
-#include <algorithm>
-#include <exception>
-#include <fstream>
-#include <iostream>
-#include <iterator>
-#include <spdlog/spdlog.h>
-#include <yaml-cpp/yaml.h>
 
 namespace wind {
 

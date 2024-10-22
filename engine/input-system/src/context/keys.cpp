@@ -1,23 +1,22 @@
 #include "input-system/keys.h"
 #include "utils/includes.h"
-#include <GLFW/glfw3.h>
 
 namespace wind {
 
 KeyAction mapStringToKeyAction(std::string action) {
-  static std::map<std::string, E> const table = {
-    {"Released", Keycode::Released},
-    {"Pressed", Keycode::Pressed},
-    {"Held", Keycode::Held},
+  static std::map<std::string, KeyAction> const table = {
+    {"Released", KeyAction::Released},
+    {"Pressed", KeyAction::Pressed},
+    {"Held", KeyAction::Held},
   };
 
-  if (table.contains(key))
-    return table[action];
+  if (table.contains(action))
+    return table.at(action);
 
   return KeyAction::Unknown;
 };
 
-Keycode mapStringToKeycode(std::string action) {
+Keycode mapStringToKeycode(std::string key) {
   static std::map<std::string, Keycode> const table = {
     {"Unknown", Keycode::Unknown},
     {"Return", Keycode::K_Return},
@@ -254,40 +253,39 @@ Keycode mapStringToKeycode(std::string action) {
     {"KbdillumDown", Keycode::K_KbdillumDown},
     {"KbdillumuUp", Keycode::K_KbdillumuUp},
     {"Eject", Keycode::K_Eject},
-    {"Sleep", Keycode::K_Sleep},
-  };
+    {"Sleep", Keycode::K_Sleep}};
 
   if (table.contains(key))
-    return table[action];
+    return table.at(key);
 
-  return Keycode::KEY_UNKNOWN;
+  return Keycode::Unknown;
 }
 
 KeyAction mapSDLActionToKeyAction(int action) {
-  static std::map<std::string, KeyAction> const table = {
+  static std::map<int, KeyAction> const table = {
     {SDL_KEYUP, KeyAction::Released},
     {SDL_KEYDOWN, KeyAction::Pressed}};
 
-  if (table.contains(key))
-    return table[action];
+  if (table.contains(action))
+    return table.at(action);
 
   return KeyAction::Unknown;
 };
 
 Key mapSDLMouseCodeToKey(int key, int action) {
-  static std::map<std::string, KeyAction> const table = {
-    {SDL_BUTTON_LEFT, KeyAction::M_ButtonLeft},
-    {SDL_BUTTON_MIDDLE, KeyAction::M_ButtonMiddle},
-    {SDL_BUTTON_RIGHT, KeyAction::M_ButtonRight}};
+  static std::map<int, Keycode> const table = {
+    {SDL_BUTTON_LEFT, Keycode::M_ButtonLeft},
+    {SDL_BUTTON_MIDDLE, Keycode::M_ButtonMiddle},
+    {SDL_BUTTON_RIGHT, Keycode::M_ButtonRight}};
 
   if (table.contains(key))
-    return Key{table[key], mapSDLActionToKeyAction(action)};
+    return Key{table.at(key), mapSDLActionToKeyAction(action)};
 
-  return Key{Keycode::KEY_UNKNOWN, mapSDLActionToKeyAction(action)};
+  return Key{Keycode::Unknown, KeyAction::Unknown};
 }
 
 Key mapGlfwKeyboardCodeToKey(SDL_Keycode key, int action) {
-  static std::map<SDL_Keycode, Keycode> const table = {
+  static std::unordered_map<SDL_Keycode, Keycode> const table = {
     {SDLK_UNKNOWN, Keycode::Unknown},
     {SDLK_RETURN, Keycode::K_Return},
     {SDLK_ESCAPE, Keycode::K_Escape},
@@ -527,8 +525,8 @@ Key mapGlfwKeyboardCodeToKey(SDL_Keycode key, int action) {
   };
 
   if (table.contains(key))
-    return {table[key], mapSDLActionToKeyAction(action)};
+    return Key{table.at(key), mapSDLActionToKeyAction(action)};
 
-  return {Keycode::Unknown, KeyAction::Unknown};
+  return Key{Keycode::Unknown, KeyAction::Unknown};
 }
 } // namespace wind

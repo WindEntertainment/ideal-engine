@@ -11,6 +11,10 @@ class MyConanFile(ConanFile):
   generators = "CMakeDeps", "CMakeToolchain"
   exports_sources = "*"
 
+  default_options = {
+    "fmt/*:header_only": True,
+  }
+
   def requirements(self):
     self.requires("sdl/2.30.8")
     self.requires("catch2/3.7.1")
