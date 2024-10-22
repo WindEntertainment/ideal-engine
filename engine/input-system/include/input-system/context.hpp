@@ -1,7 +1,7 @@
 #pragma once
-#include "keyboard-context.h"
-#include "mouse-context.h"
-#include "utils/includes.h"
+#include "keyboard-context.hpp"
+#include "mouse-context.hpp"
+#include "utils/includes.hpp"
 
 namespace wind {
 

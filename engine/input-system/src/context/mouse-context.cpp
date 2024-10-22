@@ -1,5 +1,5 @@
-#include "input-system/mouse-context.h"
-#include "input-system/keys.h"
+#include "input-system/mouse-context.hpp"
+#include "input-system/keys.hpp"
 
 namespace wind {
 void MouseContext::addPressedButton(Keycode keycode) {

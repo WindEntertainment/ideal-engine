@@ -1,5 +1,5 @@
 #pragma once
-#include <utils/utils.h>
+#include <utils/utils.hpp>
 #include <zlib.h>
 
 #ifdef WIND_PIPE_WRITE

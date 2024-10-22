@@ -1,9 +1,9 @@
 #pragma once
-#include <utils/includes.h>
+#include <utils/includes.hpp>
 
-#include "context.h"
-#include "input-system/trigger.h"
-#include "keys.h"
+#include "input-system/context.hpp"
+#include "input-system/trigger.hpp"
+#include "input-system/keys.hpp"
 
 namespace wind {
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/utils.h"
+#include "utils/utils.hpp"
 #include <SDL2/SDL.h>
 
 namespace wind {

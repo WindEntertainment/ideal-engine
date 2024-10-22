@@ -1,4 +1,4 @@
-#include "window/window.h"
+#include "window/window.hpp"
 
 namespace wind {
 

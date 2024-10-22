@@ -1,8 +1,8 @@
 project(wind-utils)
 
 set(HEADERS
-    ./include/utils/includes.h
-    ./include/utils/utils.h
+    ./include/utils/includes.hpp
+    ./include/utils/utils.hpp
 )
 
 set(SOURCES

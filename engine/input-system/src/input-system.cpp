@@ -1,11 +1,11 @@
-#include "input-system/input-system.h"
+#include "input-system/input-system.hpp"
 
-#include "input-system/context.h"
-#include "input-system/error.h"
-#include "input-system/keys.h"
-#include "input-system/trigger.h"
-#include "utils/includes.h"
-#include "utils/utils.h"
+#include "input-system/context.hpp"
+#include "input-system/error.hpp"
+#include "input-system/keys.hpp"
+#include "input-system/trigger.hpp"
+#include "utils/includes.hpp"
+#include "utils/utils.hpp"
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 

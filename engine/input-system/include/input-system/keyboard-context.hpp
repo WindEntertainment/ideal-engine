@@ -1,7 +1,7 @@
 #pragma once
-#include "input-system/keys.h"
-#include "set"
-#include "utils/includes.h"
+#include "input-system/keys.hpp"
+#include <set>
+#include "utils/includes.hpp"
 
 namespace wind {
 struct KeyboardContext {

@@ -1,13 +1,13 @@
 project(wind-input-system)
 
 set(HEADERS
-    ./include/input-system/input-system.h
-    ./include/input-system/mouse-context.h
-    ./include/input-system/keyboard-context.h
-    ./include/input-system/context.h
-    ./include/input-system/keys.h
-    ./include/input-system/trigger.h
-    ./include/input-system/error.h
+    ./include/input-system/input-system.hpp
+    ./include/input-system/mouse-context.hpp
+    ./include/input-system/keyboard-context.hpp
+    ./include/input-system/context.hpp
+    ./include/input-system/keys.hpp
+    ./include/input-system/trigger.hpp
+    ./include/input-system/error.hpp
 
 )
 
@@ -17,7 +17,6 @@ set(SOURCES
     ./src/triggers/grouped-triggers.cpp
     ./src/context/mouse-context.cpp
     ./src/context/keyboard-context.cpp
-    ./src/context/context.cpp
     ./src/context/keys.cpp
     ./src/triggers/trigger.cpp
 )

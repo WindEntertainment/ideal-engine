@@ -1,4 +1,4 @@
-#include "window/window.h"
+#include "window/window.hpp"
 
 int main(int argc, char** argv) {
   auto window = wind::Window::create([](wind::Window::Config* self) {

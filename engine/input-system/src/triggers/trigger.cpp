@@ -1,6 +1,6 @@
-#include "input-system/trigger.h"
-#include "input-system/keys.h"
-#include "utils/includes.h"
+#include "input-system/trigger.hpp"
+#include "input-system/keys.hpp"
+#include "utils/includes.hpp"
 
 namespace wind {
 Trigger::Trigger(std::string name, const Keys bindings, const Callbacks callbacks)

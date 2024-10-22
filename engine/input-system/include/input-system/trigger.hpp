@@ -1,6 +1,6 @@
 #pragma once
-#include "context.h"
-#include "input-system/keys.h"
+#include "input-system/context.hpp"
+#include "input-system/keys.hpp"
 #include <functional>
 #include <iostream>
 #include <map>
