@@ -5,7 +5,7 @@ int main(int argc, char** argv) {
     self->title = "Hello, World!";
   });
 
-  while (true) { 
+  while (true) {
     window->update();
     window->show();
   }
