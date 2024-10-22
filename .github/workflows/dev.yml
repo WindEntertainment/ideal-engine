@@ -26,7 +26,7 @@ jobs:
           - {
               name: 'Ubuntu',
               wasm: 'false',
-              projectRoot: '/home/runner/work/raylib-starter/raylib-starter',
+              projectRoot: '/home/runner/work/ideal-engine/ideal-engine',
               artifact: 'dreich-linux',
               os: 'ubuntu-latest',
               conanBuildType: 'Debug',
@@ -59,7 +59,7 @@ jobs:
           - {
               name: 'MacOS',
               wasm: 'false',
-              projectRoot: '/Users/runner/work/raylib-starter/raylib-starter',
+              projectRoot: '/Users/runner/work/ideal-engine/ideal-engine',
               artifact: 'dreich-macos',
               os: 'macos-14',
               conanBuildType: 'Debug',
@@ -95,7 +95,7 @@ jobs:
           - {
               name: 'Windows',
               wasm: 'false',
-              projectRoot: 'D:/a/raylib-starter',
+              projectRoot: 'D:/a/ideal-engine',
               artifact: 'dreich-windows',
               os: 'windows-latest',
               conanBuildType: 'Debug',
@@ -106,7 +106,7 @@ jobs:
           - {
               name: 'Ubuntu',
               wasm: 'false',
-              projectRoot: '/home/runner/work/raylib-starter/raylib-starter',
+              projectRoot: '/home/runner/work/ideal-engine/ideal-engine',
               artifact: 'dreich-linux',
               os: 'ubuntu-latest',
               conanBuildType: 'Debug',
@@ -117,7 +117,7 @@ jobs:
           - {
               name: 'MacOS',
               wasm: 'false',
-              projectRoot: '/Users/runner/work/raylib-starter/raylib-starter',
+              projectRoot: '/Users/runner/work/ideal-engine/ideal-engine',
               artifact: 'dreich-macos',
               os: 'macos-14',
               conanBuildType: 'Debug',
@@ -149,7 +149,7 @@ jobs:
           - {
               wasm: 'true',
               name: 'Windows',
-              projectRoot: 'D:/a/raylib-starter',
+              projectRoot: 'D:/a/ideal-engine',
               artifact: 'dreich-windows',
               os: 'windows-latest',
               conanBuildType: 'Debug',
@@ -160,7 +160,7 @@ jobs:
           - {
               wasm: 'true',
               name: 'Ubuntu',
-              projectRoot: '/home/runner/work/raylib-starter/raylib-starter',
+              projectRoot: '/home/runner/work/ideal-engine/ideal-engine',
               artifact: 'dreich-linux',
               os: 'ubuntu-latest',
               conanBuildType: 'Debug',
@@ -171,7 +171,7 @@ jobs:
           - {
               wasm: 'true',
               name: 'MacOS',
-              projectRoot: '/Users/runner/work/raylib-starter/raylib-starter',
+              projectRoot: '/Users/runner/work/ideal-engine/ideal-engine',
               artifact: 'dreich-macos',
               os: 'macos-14',
               conanBuildType: 'Debug',

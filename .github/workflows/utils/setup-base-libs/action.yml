@@ -27,9 +27,11 @@ runs:
         key: ${{ env.envHash }}-${{ env.os }}-brew
         sudo: false
 
-    - run: Set-MpPreference -DisableRealtimeMonitoring $true
+    - name: Set up Python 3.12
       if: env.os == 'windows-latest'
-      shell: powershell
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
 
     - name: Install dependencies windows
       if: env.os == 'windows-latest'
