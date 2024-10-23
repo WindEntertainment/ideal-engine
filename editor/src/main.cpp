@@ -1,10 +1,24 @@
-
-
+#include "ImGuiFileDialog.h"
 #include "bindings/imgui_impl_opengl3.h"
 #include "bindings/imgui_impl_sdl2.h"
+#include "imconfig.h"
 #include "imgui.h"
+#include "imgui_export_headers.h"
+#include "imgui_internal.h"
+#include "imstb_rectpack.h"
+#include "imstb_textedit.h"
+#include "imstb_truetype.h"
 #include <SDL.h>
+#include <iostream>
 #include <stdio.h>
+#include <string>
+#include <vector>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#ifndef __gl_h_
+#include <glad/glad.h> // IWYU pragma: export
+#endif
+
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <SDL_opengles2.h>
 #else
@@ -15,7 +29,109 @@
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
 
+GLuint LoadTextureFromFile(const char* filename, int* width, int* height) {
+  int channels;
+  unsigned char* data = stbi_load(filename, width, height, &channels, 0);
+  if (!data) {
+    std::cerr << "Failed to load image: " << filename << std::endl;
+    return 0;
+  }
+
+  GLuint texture;
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  // Set texture parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // Load image data into OpenGL texture
+  GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
+  glTexImage2D(GL_TEXTURE_2D, 0, format, *width, *height, 0, format, GL_UNSIGNED_BYTE, data);
+  glGenerateMipmap(GL_TEXTURE_2D);
+
+  stbi_image_free(data);
+  return texture;
+}
+
+struct ImageTab {
+  std::string name;
+  GLuint texture;
+  int width;
+  int height;
+  bool isOpen;
+  int cellWidth = 50;  // Default cell width
+  int cellHeight = 50; // Default cell height
+  bool drawGrid = false;
+};
+void DrawGridLines(const ImageTab& tab) {
+  for (int x = 0; x <= tab.width; x += tab.cellWidth) {
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(x, 0), ImVec2(x, tab.height), IM_COL32(255, 255, 255, 255));
+  }
+  for (int y = 0; y <= tab.height; y += tab.cellHeight) {
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(0, y), ImVec2(tab.width, y), IM_COL32(255, 255, 255, 255));
+  }
+}
+
+std::vector<ImageTab> openTabs = {};
+bool showGridPopup = false;
+
+// Test function to add new tabs (e.g., from the File menu)
+void AddNewTab(const std::string& filename) {
+  openTabs.push_back({filename, true});
+}
+
+void RenderCellsTab() {
+  if (ImGui::BeginTabBar("CellsTab")) {
+    if (ImGui::BeginTabItem("Cells")) {
+
+      if (ImGui::Button("Auto")) {
+        showGridPopup = true; // Open the popup when "Auto" is clicked
+      }
+
+      // Popup for setting cell width and height
+      if (showGridPopup) {
+        ImGui::OpenPopup("Set Cell Size");
+      }
+
+      if (ImGui::BeginPopupModal("Set Cell Size", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+        static int cellWidth = 50;
+        static int cellHeight = 50;
+
+        ImGui::InputInt("Cell Width", &cellWidth);
+        ImGui::InputInt("Cell Height", &cellHeight);
+
+        if (ImGui::Button("Apply")) {
+          // Set the cell sizes for each tab
+          for (auto& tab : openTabs) {
+            tab.cellWidth = cellWidth;
+            tab.cellHeight = cellHeight;
+            tab.drawGrid = true; // Enable grid drawing
+          }
+          showGridPopup = false;
+          ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel")) {
+          showGridPopup = false;
+          ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+      }
+
+      ImGui::EndTabItem();
+    }
+    ImGui::EndTabBar();
+  }
+}
+
 int main(int, char**) {
+
+  IGFD::FileDialogConfig chlen = {};
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
     printf("Error: %s\n", SDL_GetError());
@@ -60,6 +176,9 @@ int main(int, char**) {
   }
 
   SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+  if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+    return 1;
+  }
   SDL_GL_MakeCurrent(window, gl_context);
   SDL_GL_SetSwapInterval(1);
 
@@ -67,10 +186,18 @@ int main(int, char**) {
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
   (void)io;
+  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 
   ImGui::StyleColorsDark();
+
+  ImGuiStyle& style = ImGui::GetStyle();
+  if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    style.WindowRounding = 0.0f;
+    style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+  }
 
   ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
   ImGui_ImplOpenGL3_Init(glsl_version);
@@ -104,44 +231,128 @@ int main(int, char**) {
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    if (show_demo_window)
-      ImGui::ShowDemoWindow(&show_demo_window);
+    ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_MenuBar);
 
-    {
-      static float f = 0.0f;
-      static int counter = 0;
+    if (ImGui::BeginMenuBar()) {
+      if (ImGui::BeginMenu("Cells")) {
+        if (ImGui::MenuItem("Auto")) {
+          // if (ImGui::Button("Auto")) {
+          showGridPopup = true; // Open the popup when "Auto" is clicked
+          // }
 
-      ImGui::Begin("Hello, world!");
+          // Popup for setting cell width and height
+        }
 
-      ImGui::Text("This is some useful text.");
-      ImGui::Checkbox("Demo Window", &show_demo_window);
-      ImGui::Checkbox("Another Window", &show_another_window);
+        ImGui::EndMenu();
+      }
+      if (ImGui::BeginMenu("File")) {
+        if (ImGui::MenuItem("Create")) {
+        }
+        if (ImGui::MenuItem("Open", "Ctrl+O")) {
+          ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Image", ".png,.jpg,.jpeg,.bmp", {});
+        }
+        if (ImGui::MenuItem("Save", "Ctrl+S")) {
+        }
+        if (ImGui::MenuItem("Save as..")) {
+        }
+        ImGui::EndMenu();
+      }
+      ImGui::EndMenuBar();
+    }
+    if (showGridPopup) {
+      ImGui::OpenPopup("Set Cell Size");
+    }
 
-      ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-      ImGui::ColorEdit3("clear color", (float*)&clear_color);
+    if (ImGui::BeginPopupModal("Set Cell Size", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+      static int cellWidth = 50;
+      static int cellHeight = 50;
 
-      if (ImGui::Button("Button"))
-        counter++;
+      ImGui::InputInt("Cell Width", &cellWidth);
+      ImGui::InputInt("Cell Height", &cellHeight);
+
+      if (ImGui::Button("Apply")) {
+        // Set the cell sizes for each tab
+        for (auto& tab : openTabs) {
+          tab.cellWidth = cellWidth;
+          tab.cellHeight = cellHeight;
+          tab.drawGrid = true; // Enable grid drawing
+        }
+        showGridPopup = false;
+        ImGui::CloseCurrentPopup();
+      }
+
       ImGui::SameLine();
-      ImGui::Text("counter = %d", counter);
+      if (ImGui::Button("Cancel")) {
+        showGridPopup = false;
+        ImGui::CloseCurrentPopup();
+      }
 
-      ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-      ImGui::End();
+      ImGui::EndPopup();
     }
 
-    if (show_another_window) {
-      ImGui::Begin("Another Window", &show_another_window);
-      ImGui::Text("Hello from another window!");
-      if (ImGui::Button("Close Me"))
-        show_another_window = false;
-      ImGui::End();
+    if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
+      if (ImGuiFileDialog::Instance()->IsOk()) {
+        std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+        std::string fileName = ImGuiFileDialog::Instance()->GetCurrentFileName();
+
+        // Load the image and create a new tab
+        int width, height;
+        GLuint texture = LoadTextureFromFile(filePath.c_str(), &width, &height);
+        if (texture) {
+          openTabs.push_back({fileName, texture, width, height, true});
+        }
+      }
+      ImGuiFileDialog::Instance()->Close();
     }
 
+    if (ImGui::BeginTabBar("File Tabs", ImGuiTabBarFlags_Reorderable)) {
+      // Iterate over open tabs and create a tab for each
+      for (size_t i = 0; i < openTabs.size(); ++i) {
+        ImageTab& tab = openTabs[i];
+        bool isOpen = tab.isOpen;
+
+        if (ImGui::BeginTabItem(tab.name.c_str(), &isOpen)) {
+          // Render the image as a texture
+          ImGui::Image((void*)(intptr_t)tab.texture, ImVec2(tab.width, tab.height));
+          if (tab.drawGrid) {
+            DrawGridLines(tab);
+          }
+          ImGui::EndTabItem();
+        }
+
+        // Handle closing tabs
+        if (!isOpen) {
+          tab.isOpen = false;
+        }
+      }
+
+      ImGui::EndTabBar();
+    }
+
+    openTabs.erase(
+      std::remove_if(openTabs.begin(), openTabs.end(), [](const ImageTab& tab) { return !tab.isOpen; }),
+      openTabs.end());
+
+    ImGui::End();
+
+    ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+    ImGui::Text("Hello from another window!");
+    if (ImGui::Button("Close Me"))
+      show_another_window = false;
+    ImGui::End();
     ImGui::Render();
     glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+      SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+      SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+      ImGui::UpdatePlatformWindows();
+      ImGui::RenderPlatformWindowsDefault();
+      SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+    }
     SDL_GL_SwapWindow(window);
   }
 #ifdef __EMSCRIPTEN__

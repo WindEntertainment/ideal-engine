@@ -26,3 +26,4 @@ emcc-cache
 !/.vscode/**
 
 coverage
+imgui.ini
