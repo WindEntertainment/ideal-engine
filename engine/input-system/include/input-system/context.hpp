@@ -5,8 +5,8 @@
 
 namespace wind {
 
-struct InputSystemContext {
-  KeyboardContext keyboardContext;
-  MouseContext mouseContext;
-};
+  struct InputSystemContext {
+    KeyboardContext keyboardContext;
+    MouseContext mouseContext;
+  };
 } // namespace wind

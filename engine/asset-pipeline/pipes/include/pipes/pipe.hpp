@@ -8,33 +8,32 @@
 
 namespace wind {
 
-using asset_id = unsigned int;
+  using asset_id = unsigned int;
 
-namespace assets {
+  namespace assets {
 
-class AssetPipe {
-protected:
-  asset_id m_id;
+    class AssetPipe {
+    protected:
+      asset_id m_id;
 
-public:
+    public:
 #ifdef WIND_PIPE_WRITE
-  virtual void config(YAML::Node& config){};
-  virtual void compile(const fs::path& _source, const fs::path& _destination) = 0;
+      virtual void config(YAML::Node &config){};
+      virtual void
+      compile(const fs::path &_source, const fs::path &_destination) = 0;
 #endif
 
-  virtual void* load(std::ifstream& file) = 0;
+      virtual void *load(std::ifstream &file) = 0;
 
-  asset_id id() const {
-    return m_id;
-  }
+      asset_id id() const { return m_id; }
 
-  AssetPipe(const char* _id) {
-    std::hash<std::string> hasher;
-    m_id = hasher(_id);
-  }
+      AssetPipe(const char *_id) {
+        std::hash<std::string> hasher;
+        m_id = hasher(_id);
+      }
 
-  virtual ~AssetPipe() = default;
-};
+      virtual ~AssetPipe() = default;
+    };
 
-} // namespace assets
+  } // namespace assets
 } // namespace wind

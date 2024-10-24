@@ -19,26 +19,39 @@
 #include "asset-bundler/consts.hpp"
 
 namespace wind {
-namespace assets {
+  namespace assets {
 
-class AssetBundler {
-public:
-  void build(const fs::path& source);
+    class AssetBundler {
+    public:
+      void build(const fs::path &source);
 
-private:
-  void clearUnusedCache(const fs::path& source, const fs::path& cache);
+    private:
+      void clearUnusedCache(const fs::path &source, const fs::path &cache);
 
-  void processDirectory(const fs::path& source, fs::path destination);
-  void processChildDirectories(const fs::path& source, const fs::path& destination, const YAML::Node& config);
-  void compileDirectory(const fs::path& source, const fs::path& destination, const YAML::Node& config);
-  void preprocessDirectory(const fs::path& path, const YAML::Node& config);
+      void processDirectory(const fs::path &source, fs::path destination);
+      void processChildDirectories(
+        const fs::path &source,
+        const fs::path &destination,
+        const YAML::Node &config
+      );
+      void compileDirectory(
+        const fs::path &source,
+        const fs::path &destination,
+        const YAML::Node &config
+      );
+      void preprocessDirectory(const fs::path &path, const YAML::Node &config);
 
-  void compileFile(const fs::path& source, const fs::path& destination, AssetPipe* pipe);
-  void linkDirectory(const fs::path& source, const fs::path& destination);
-  void exportDirectory(const fs::path& source, const fs::path& destination);
+      void compileFile(
+        const fs::path &source,
+        const fs::path &destination,
+        AssetPipe *pipe
+      );
+      void linkDirectory(const fs::path &source, const fs::path &destination);
+      void exportDirectory(const fs::path &source, const fs::path &destination);
 
-  fs::recursive_directory_iterator createRecursiveIterator(const fs::path& path);
-};
+      fs::recursive_directory_iterator
+      createRecursiveIterator(const fs::path &path);
+    };
 
-} // namespace assets
+  } // namespace assets
 } // namespace wind
