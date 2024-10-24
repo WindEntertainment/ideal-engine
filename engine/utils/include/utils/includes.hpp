@@ -7,6 +7,8 @@
 #include <filesystem>      // IWYU pragma: export
 #include <list>            // IWYU pragma: export
 #include <map>             // IWYU pragma: export
+#include <set>             // IWYU pragma: export
+#include <unordered_set>    // IWYU pragma: export
 #include <algorithm>       // IWYU pragma: export
 #include <ranges>          // IWYU pragma: export
 #include <fstream>         // IWYU pragma: export

@@ -1,20 +1,15 @@
-#include "ImGuiFileDialog.h"
 #include "bindings/imgui_impl_opengl3.h"
 #include "bindings/imgui_impl_sdl2.h"
-#include "imconfig.h"
-#include "imgui.h"
-#include "imgui_export_headers.h"
-#include "imgui_internal.h"
-#include "imstb_rectpack.h"
-#include "imstb_textedit.h"
-#include "imstb_truetype.h"
-#include <SDL.h>
-#include <iostream>
-#include <stdio.h>
-#include <string>
-#include <vector>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
+#include <SDL.h>
+#include <editor/editor.hpp>
+#include <editor/main.hpp>
+
+using namespace editor::components;
+
 #ifndef __gl_h_
 #include <glad/glad.h> // IWYU pragma: export
 #endif
@@ -29,9 +24,9 @@
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
 
-GLuint LoadTextureFromFile(const char* filename, int* width, int* height) {
+GLuint LoadTextureFromFile(const char *filename, int *width, int *height) {
   int channels;
-  unsigned char* data = stbi_load(filename, width, height, &channels, 0);
+  unsigned char *data = stbi_load(filename, width, height, &channels, 0);
   if (!data) {
     std::cerr << "Failed to load image: " << filename << std::endl;
     return 0;
@@ -49,7 +44,9 @@ GLuint LoadTextureFromFile(const char* filename, int* width, int* height) {
 
   // Load image data into OpenGL texture
   GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
-  glTexImage2D(GL_TEXTURE_2D, 0, format, *width, *height, 0, format, GL_UNSIGNED_BYTE, data);
+  glTexImage2D(
+    GL_TEXTURE_2D, 0, format, *width, *height, 0, format, GL_UNSIGNED_BYTE, data
+  );
   glGenerateMipmap(GL_TEXTURE_2D);
 
   stbi_image_free(data);
@@ -66,12 +63,16 @@ struct ImageTab {
   int cellHeight = 50; // Default cell height
   bool drawGrid = false;
 };
-void DrawGridLines(const ImageTab& tab) {
+void DrawGridLines(const ImageTab &tab) {
   for (int x = 0; x <= tab.width; x += tab.cellWidth) {
-    ImGui::GetWindowDrawList()->AddLine(ImVec2(x, 0), ImVec2(x, tab.height), IM_COL32(255, 255, 255, 255));
+    ImGui::GetWindowDrawList()->AddLine(
+      ImVec2(x, 0), ImVec2(x, tab.height), IM_COL32(255, 255, 255, 255)
+    );
   }
   for (int y = 0; y <= tab.height; y += tab.cellHeight) {
-    ImGui::GetWindowDrawList()->AddLine(ImVec2(0, y), ImVec2(tab.width, y), IM_COL32(255, 255, 255, 255));
+    ImGui::GetWindowDrawList()->AddLine(
+      ImVec2(0, y), ImVec2(tab.width, y), IM_COL32(255, 255, 255, 255)
+    );
   }
 }
 
@@ -79,14 +80,13 @@ std::vector<ImageTab> openTabs = {};
 bool showGridPopup = false;
 
 // Test function to add new tabs (e.g., from the File menu)
-void AddNewTab(const std::string& filename) {
+void AddNewTab(const std::string &filename) {
   openTabs.push_back({filename, true});
 }
 
 void RenderCellsTab() {
   if (ImGui::BeginTabBar("CellsTab")) {
     if (ImGui::BeginTabItem("Cells")) {
-
       if (ImGui::Button("Auto")) {
         showGridPopup = true; // Open the popup when "Auto" is clicked
       }
@@ -96,7 +96,9 @@ void RenderCellsTab() {
         ImGui::OpenPopup("Set Cell Size");
       }
 
-      if (ImGui::BeginPopupModal("Set Cell Size", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+      if (ImGui::BeginPopupModal(
+            "Set Cell Size", NULL, ImGuiWindowFlags_AlwaysAutoResize
+          )) {
         static int cellWidth = 50;
         static int cellHeight = 50;
 
@@ -105,7 +107,7 @@ void RenderCellsTab() {
 
         if (ImGui::Button("Apply")) {
           // Set the cell sizes for each tab
-          for (auto& tab : openTabs) {
+          for (auto &tab : openTabs) {
             tab.cellWidth = cellWidth;
             tab.cellHeight = cellHeight;
             tab.drawGrid = true; // Enable grid drawing
@@ -129,32 +131,34 @@ void RenderCellsTab() {
   }
 }
 
-int main(int, char**) {
-
+int main(int, char **) {
   IGFD::FileDialogConfig chlen = {};
 
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
+      0) {
     printf("Error: %s\n", SDL_GetError());
     return -1;
   }
 
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 
-  const char* glsl_version = "#version 100";
+  const char *glsl_version = "#version 100";
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #elif defined(__APPLE__)
 
-  const char* glsl_version = "#version 150";
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  const char *glsl_version = "#version 150";
+  SDL_GL_SetAttribute(
+    SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG
+  );
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 #else
 
-  const char* glsl_version = "#version 130";
+  const char *glsl_version = "#version 130";
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -168,8 +172,17 @@ int main(int, char**) {
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-  SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-  SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL3 example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+  SDL_WindowFlags window_flags =
+    (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
+                      SDL_WINDOW_ALLOW_HIGHDPI);
+  SDL_Window *window = SDL_CreateWindow(
+    "Dear ImGui SDL2+OpenGL3 example",
+    SDL_WINDOWPOS_CENTERED,
+    SDL_WINDOWPOS_CENTERED,
+    1280,
+    720,
+    window_flags
+  );
   if (window == nullptr) {
     printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
     return -1;
@@ -184,7 +197,7 @@ int main(int, char**) {
 
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
-  ImGuiIO& io = ImGui::GetIO();
+  ImGuiIO &io = ImGui::GetIO();
   (void)io;
   io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -193,7 +206,7 @@ int main(int, char**) {
 
   ImGui::StyleColorsDark();
 
-  ImGuiStyle& style = ImGui::GetStyle();
+  ImGuiStyle &style = ImGui::GetStyle();
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
     style.WindowRounding = 0.0f;
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
@@ -207,6 +220,25 @@ int main(int, char**) {
   ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
   bool done = false;
+
+  auto menuBar = MenuBar({
+    Menu(
+      "File",
+      {
+        MenuItem("Create", []() {}),
+        MenuItem("Open", []() {}),
+        MenuItem("Save", []() {}),
+        MenuItem("Save as..", []() {}),
+      }
+    ),
+    Menu(
+      "Cells",
+      {
+        MenuItem("Auto", []() {}),
+      }
+    ),
+  });
+
 #ifdef __EMSCRIPTEN__
   io.IniFilename = nullptr;
   EMSCRIPTEN_MAINLOOP_BEGIN
@@ -219,7 +251,9 @@ int main(int, char**) {
       ImGui_ImplSDL2_ProcessEvent(&event);
       if (event.type == SDL_QUIT)
         done = true;
-      if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
+      if (event.type == SDL_WINDOWEVENT &&
+          event.window.event == SDL_WINDOWEVENT_CLOSE &&
+          event.window.windowID == SDL_GetWindowID(window))
         done = true;
     }
     if (SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED) {
@@ -245,16 +279,16 @@ int main(int, char**) {
 
         ImGui::EndMenu();
       }
+
       if (ImGui::BeginMenu("File")) {
-        if (ImGui::MenuItem("Create")) {
-        }
+        if (ImGui::MenuItem("Create")) {}
         if (ImGui::MenuItem("Open", "Ctrl+O")) {
-          ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose Image", ".png,.jpg,.jpeg,.bmp", {});
+          ImGuiFileDialog::Instance()->OpenDialog(
+            "ChooseFileDlgKey", "Choose Image", ".png,.jpg,.jpeg,.bmp", {}
+          );
         }
-        if (ImGui::MenuItem("Save", "Ctrl+S")) {
-        }
-        if (ImGui::MenuItem("Save as..")) {
-        }
+        if (ImGui::MenuItem("Save", "Ctrl+S")) {}
+        if (ImGui::MenuItem("Save as..")) {}
         ImGui::EndMenu();
       }
       ImGui::EndMenuBar();
@@ -263,7 +297,9 @@ int main(int, char**) {
       ImGui::OpenPopup("Set Cell Size");
     }
 
-    if (ImGui::BeginPopupModal("Set Cell Size", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal(
+          "Set Cell Size", NULL, ImGuiWindowFlags_AlwaysAutoResize
+        )) {
       static int cellWidth = 50;
       static int cellHeight = 50;
 
@@ -272,7 +308,7 @@ int main(int, char**) {
 
       if (ImGui::Button("Apply")) {
         // Set the cell sizes for each tab
-        for (auto& tab : openTabs) {
+        for (auto &tab : openTabs) {
           tab.cellWidth = cellWidth;
           tab.cellHeight = cellHeight;
           tab.drawGrid = true; // Enable grid drawing
@@ -293,7 +329,8 @@ int main(int, char**) {
     if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
       if (ImGuiFileDialog::Instance()->IsOk()) {
         std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
-        std::string fileName = ImGuiFileDialog::Instance()->GetCurrentFileName();
+        std::string fileName =
+          ImGuiFileDialog::Instance()->GetCurrentFileName();
 
         // Load the image and create a new tab
         int width, height;
@@ -308,12 +345,14 @@ int main(int, char**) {
     if (ImGui::BeginTabBar("File Tabs", ImGuiTabBarFlags_Reorderable)) {
       // Iterate over open tabs and create a tab for each
       for (size_t i = 0; i < openTabs.size(); ++i) {
-        ImageTab& tab = openTabs[i];
+        ImageTab &tab = openTabs[i];
         bool isOpen = tab.isOpen;
 
         if (ImGui::BeginTabItem(tab.name.c_str(), &isOpen)) {
           // Render the image as a texture
-          ImGui::Image((void*)(intptr_t)tab.texture, ImVec2(tab.width, tab.height));
+          ImGui::Image(
+            (void *)(intptr_t)tab.texture, ImVec2(tab.width, tab.height)
+          );
           if (tab.drawGrid) {
             DrawGridLines(tab);
           }
@@ -330,24 +369,39 @@ int main(int, char**) {
     }
 
     openTabs.erase(
-      std::remove_if(openTabs.begin(), openTabs.end(), [](const ImageTab& tab) { return !tab.isOpen; }),
-      openTabs.end());
+      std::remove_if(
+        openTabs.begin(),
+        openTabs.end(),
+        [](const ImageTab &tab) { return !tab.isOpen; }
+      ),
+      openTabs.end()
+    );
 
     ImGui::End();
 
-    ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+    ImGui::Begin(
+      "Another Window",
+      &show_another_window
+    ); // Pass a pointer to our bool variable (the window
+       // will have a closing button that will clear the
+       // bool when clicked)
     ImGui::Text("Hello from another window!");
     if (ImGui::Button("Close Me"))
       show_another_window = false;
     ImGui::End();
     ImGui::Render();
     glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+    glClearColor(
+      clear_color.x * clear_color.w,
+      clear_color.y * clear_color.w,
+      clear_color.z * clear_color.w,
+      clear_color.w
+    );
     glClear(GL_COLOR_BUFFER_BIT);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-      SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+      SDL_Window *backup_current_window = SDL_GL_GetCurrentWindow();
       SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
       ImGui::UpdatePlatformWindows();
       ImGui::RenderPlatformWindowsDefault();
