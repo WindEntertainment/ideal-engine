@@ -10,3 +10,5 @@
 #include "imgui_export_headers.h"
 
 #include <utils/utils.hpp>
+
+using Callback = std::function<void()>;

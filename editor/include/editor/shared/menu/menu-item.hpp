@@ -4,8 +4,6 @@
 
 namespace editor {
   namespace components {
-    using Callback = std::function<void()>;
-
     class MenuItem {
     public:
       const std::string id;

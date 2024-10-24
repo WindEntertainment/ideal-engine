@@ -1,4 +1,4 @@
-#include <editor/shared/menu-bar.hpp>
+#include <editor/shared/menu/menu-bar.hpp>
 
 namespace editor {
   namespace components {

@@ -84,57 +84,11 @@ void AddNewTab(const std::string &filename) {
   openTabs.push_back({filename, true});
 }
 
-void RenderCellsTab() {
-  if (ImGui::BeginTabBar("CellsTab")) {
-    if (ImGui::BeginTabItem("Cells")) {
-      if (ImGui::Button("Auto")) {
-        showGridPopup = true; // Open the popup when "Auto" is clicked
-      }
-
-      // Popup for setting cell width and height
-      if (showGridPopup) {
-        ImGui::OpenPopup("Set Cell Size");
-      }
-
-      if (ImGui::BeginPopupModal(
-            "Set Cell Size", NULL, ImGuiWindowFlags_AlwaysAutoResize
-          )) {
-        static int cellWidth = 50;
-        static int cellHeight = 50;
-
-        ImGui::InputInt("Cell Width", &cellWidth);
-        ImGui::InputInt("Cell Height", &cellHeight);
-
-        if (ImGui::Button("Apply")) {
-          // Set the cell sizes for each tab
-          for (auto &tab : openTabs) {
-            tab.cellWidth = cellWidth;
-            tab.cellHeight = cellHeight;
-            tab.drawGrid = true; // Enable grid drawing
-          }
-          showGridPopup = false;
-          ImGui::CloseCurrentPopup();
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("Cancel")) {
-          showGridPopup = false;
-          ImGui::CloseCurrentPopup();
-        }
-
-        ImGui::EndPopup();
-      }
-
-      ImGui::EndTabItem();
-    }
-    ImGui::EndTabBar();
-  }
-}
-
 int main(int, char **) {
   IGFD::FileDialogConfig chlen = {};
 
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
+      0) {
     printf("Error: %s\n", SDL_GetError());
     return -1;
   }
@@ -248,6 +202,34 @@ int main(int, char **) {
     ),
   });
 
+  auto popup = Popup("autoCellConfig", []() {
+    static int cellWidth = 50;
+    static int cellHeight = 50;
+
+    ImGui::InputInt("Cell Width", &cellWidth);
+    ImGui::InputInt("Cell Height", &cellHeight);
+
+    if (ImGui::Button("Apply")) {
+      for (auto &tab : openTabs) {
+        tab.cellWidth = cellWidth;
+        tab.cellHeight = cellHeight;
+        tab.drawGrid = true;
+      }
+      showGridPopup = false;
+      ImGui::CloseCurrentPopup();
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Cancel")) {
+      showGridPopup = false;
+      ImGui::CloseCurrentPopup();
+    }
+  });
+
+  auto tabBar = TabBar({
+    Tab({"Files", {TabItem({"Example", []() {}, true})}}),
+  });
+
 #ifdef __EMSCRIPTEN__
   io.IniFilename = nullptr;
   EMSCRIPTEN_MAINLOOP_BEGIN
@@ -274,68 +256,17 @@ int main(int, char **) {
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_MenuBar);
+    ImGui::Begin("Sprite sheet", NULL, ImGuiWindowFlags_MenuBar);
 
-    // if (ImGui::BeginMenuBar()) {
-    //   if (ImGui::BeginMenu("Cells")) {
-    // if (ImGui::MenuItem("Auto")) {
-    //       // if (ImGui::Button("Auto")) {
-    //       showGridPopup = true; // Open the popup when "Auto" is clicked
-    //       // }
-
-    //       // Popup for setting cell width and height
-    //     }
-
-    //     ImGui::EndMenu();
-    //   }
-
-    //   if (ImGui::BeginMenu("File")) {
-    //     if (ImGui::MenuItem("Create")) {}
-    //     if (ImGui::MenuItem("Open", "Ctrl+O")) {
-    //       ImGuiFileDialog::Instance()->OpenDialog(
-    //         "ChooseFileDlgKey", "Choose Image", ".png,.jpg,.jpeg,.bmp", {}
-    //       );
-    //     }
-    //     if (ImGui::MenuItem("Save", "Ctrl+S")) {}
-    //     if (ImGui::MenuItem("Save as..")) {}
-    //     ImGui::EndMenu();
-    //   }
-    //   ImGui::EndMenuBar();
-    // }
     menuBar.render();
 
     if (showGridPopup) {
-      ImGui::OpenPopup("Set Cell Size");
+      popup.open();
     }
 
-    if (ImGui::BeginPopupModal(
-          "Set Cell Size", NULL, ImGuiWindowFlags_AlwaysAutoResize
-        )) {
-      static int cellWidth = 50;
-      static int cellHeight = 50;
+    popup.render();
 
-      ImGui::InputInt("Cell Width", &cellWidth);
-      ImGui::InputInt("Cell Height", &cellHeight);
-
-      if (ImGui::Button("Apply")) {
-        // Set the cell sizes for each tab
-        for (auto &tab : openTabs) {
-          tab.cellWidth = cellWidth;
-          tab.cellHeight = cellHeight;
-          tab.drawGrid = true; // Enable grid drawing
-        }
-        showGridPopup = false;
-        ImGui::CloseCurrentPopup();
-      }
-
-      ImGui::SameLine();
-      if (ImGui::Button("Cancel")) {
-        showGridPopup = false;
-        ImGui::CloseCurrentPopup();
-      }
-
-      ImGui::EndPopup();
-    }
+    tabBar.render();
 
     if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) {
       if (ImGuiFileDialog::Instance()->IsOk()) {
@@ -353,31 +284,31 @@ int main(int, char **) {
       ImGuiFileDialog::Instance()->Close();
     }
 
-    if (ImGui::BeginTabBar("File Tabs", ImGuiTabBarFlags_Reorderable)) {
-      // Iterate over open tabs and create a tab for each
-      for (size_t i = 0; i < openTabs.size(); ++i) {
-        ImageTab &tab = openTabs[i];
-        bool isOpen = tab.isOpen;
+    // if (ImGui::BeginTabBar("File Tabs", ImGuiTabBarFlags_Reorderable)) {
+    //   // Iterate over open tabs and create a tab for each
+    //   for (size_t i = 0; i < openTabs.size(); ++i) {
+    //     ImageTab &tab = openTabs[i];
+    //     bool isOpen = tab.isOpen;
 
-        if (ImGui::BeginTabItem(tab.name.c_str(), &isOpen)) {
-          // Render the image as a texture
-          ImGui::Image(
-            (void *)(intptr_t)tab.texture, ImVec2(tab.width, tab.height)
-          );
-          if (tab.drawGrid) {
-            DrawGridLines(tab);
-          }
-          ImGui::EndTabItem();
-        }
+    //     if (ImGui::BeginTabItem(tab.name.c_str(), &isOpen)) {
+    //       // Render the image as a texture
+    //       ImGui::Image(
+    //         (void *)(intptr_t)tab.texture, ImVec2(tab.width, tab.height)
+    //       );
+    //       if (tab.drawGrid) {
+    //         DrawGridLines(tab);
+    //       }
+    //       ImGui::EndTabItem();
+    //     }
 
-        // Handle closing tabs
-        if (!isOpen) {
-          tab.isOpen = false;
-        }
-      }
+    //     // Handle closing tabs
+    //     if (!isOpen) {
+    //       tab.isOpen = false;
+    //     }
+    //   }
 
-      ImGui::EndTabBar();
-    }
+    //   ImGui::EndTabBar();
+    // }
 
     openTabs.erase(
       std::remove_if(
@@ -390,17 +321,8 @@ int main(int, char **) {
 
     ImGui::End();
 
-    ImGui::Begin(
-      "Another Window",
-      &show_another_window
-    ); // Pass a pointer to our bool variable (the window
-       // will have a closing button that will clear the
-       // bool when clicked)
-    ImGui::Text("Hello from another window!");
-    if (ImGui::Button("Close Me"))
-      show_another_window = false;
-    ImGui::End();
     ImGui::Render();
+
     glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
     glClearColor(
       clear_color.x * clear_color.w,
