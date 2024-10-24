@@ -267,32 +267,34 @@ int main(int, char **) {
 
     ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_MenuBar);
 
-    if (ImGui::BeginMenuBar()) {
-      if (ImGui::BeginMenu("Cells")) {
-        if (ImGui::MenuItem("Auto")) {
-          // if (ImGui::Button("Auto")) {
-          showGridPopup = true; // Open the popup when "Auto" is clicked
-          // }
+    // if (ImGui::BeginMenuBar()) {
+    //   if (ImGui::BeginMenu("Cells")) {
+    //     if (ImGui::MenuItem("Auto")) {
+    //       // if (ImGui::Button("Auto")) {
+    //       showGridPopup = true; // Open the popup when "Auto" is clicked
+    //       // }
 
-          // Popup for setting cell width and height
-        }
+    //       // Popup for setting cell width and height
+    //     }
 
-        ImGui::EndMenu();
-      }
+    //     ImGui::EndMenu();
+    //   }
 
-      if (ImGui::BeginMenu("File")) {
-        if (ImGui::MenuItem("Create")) {}
-        if (ImGui::MenuItem("Open", "Ctrl+O")) {
-          ImGuiFileDialog::Instance()->OpenDialog(
-            "ChooseFileDlgKey", "Choose Image", ".png,.jpg,.jpeg,.bmp", {}
-          );
-        }
-        if (ImGui::MenuItem("Save", "Ctrl+S")) {}
-        if (ImGui::MenuItem("Save as..")) {}
-        ImGui::EndMenu();
-      }
-      ImGui::EndMenuBar();
-    }
+    //   if (ImGui::BeginMenu("File")) {
+    //     if (ImGui::MenuItem("Create")) {}
+    //     if (ImGui::MenuItem("Open", "Ctrl+O")) {
+    //       ImGuiFileDialog::Instance()->OpenDialog(
+    //         "ChooseFileDlgKey", "Choose Image", ".png,.jpg,.jpeg,.bmp", {}
+    //       );
+    //     }
+    //     if (ImGui::MenuItem("Save", "Ctrl+S")) {}
+    //     if (ImGui::MenuItem("Save as..")) {}
+    //     ImGui::EndMenu();
+    //   }
+    //   ImGui::EndMenuBar();
+    // }
+    menuBar.render();
+
     if (showGridPopup) {
       ImGui::OpenPopup("Set Cell Size");
     }
