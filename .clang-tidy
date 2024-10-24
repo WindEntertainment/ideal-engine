@@ -14,4 +14,6 @@ CheckOptions:
     value: snake_case
   - key: readability-identifier-naming.ClassCase
     value: CamelCase
+  - key: modernize-use-auto
+    value: "auto"
 FormatStyle: "file"

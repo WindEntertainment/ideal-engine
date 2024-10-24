@@ -4,10 +4,16 @@ description: Lint native
 runs:
   using: 'composite'
   steps:
-    - name: Lint
+    - name: Format
       uses: DoozyX/clang-format-lint-action@v0.17
       with:
         source: './game'
         extensions: 'h,cpp,hpp'
         clangFormatVersion: 17
         inplace: true
+
+    - name: Lint
+      uses: HorstBaerbel/action-clang-tidy@1.2
+      with:
+        scandir: '.'
+        extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
