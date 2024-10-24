@@ -9,7 +9,7 @@ runs:
       with:
         source: '.'
         extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
-        clangFormatVersion: 20
+        clangFormatVersion: 17
         inplace: true
 
     # - name: Lint
