@@ -43,60 +43,61 @@
 //  linked into the main shader. 2021-05-24: OpenGL: Access GL_CLIP_ORIGIN when
 //  "GL_ARB_clip_control" extension is detected, inside of just OpenGL 4.5
 //  version. 2021-05-19: OpenGL: Replaced direct access to ImDrawCmd::TextureId
-//  with a call to ImDrawCmd::GetTexID(). (will become a requirement) 2021-04-06:
-//  OpenGL: Don't try to read GL_CLIP_ORIGIN unless we're OpenGL 4.5 or greater.
-//  2021-02-18: OpenGL: Change blending equation to preserve alpha in output
-//  buffer. 2021-01-03: OpenGL: Backup, setup and restore GL_STENCIL_TEST state.
-//  2020-10-23: OpenGL: Backup, setup and restore GL_PRIMITIVE_RESTART state.
-//  2020-10-15: OpenGL: Use glGetString(GL_VERSION) instead of
-//  glGetIntegerv(GL_MAJOR_VERSION, ...) when the later returns zero (e.g.
-//  Desktop GL 2.x) 2020-09-17: OpenGL: Fix to avoid compiling/calling
+//  with a call to ImDrawCmd::GetTexID(). (will become a requirement)
+//  2021-04-06: OpenGL: Don't try to read GL_CLIP_ORIGIN unless we're OpenGL 4.5
+//  or greater. 2021-02-18: OpenGL: Change blending equation to preserve alpha
+//  in output buffer. 2021-01-03: OpenGL: Backup, setup and restore
+//  GL_STENCIL_TEST state. 2020-10-23: OpenGL: Backup, setup and restore
+//  GL_PRIMITIVE_RESTART state. 2020-10-15: OpenGL: Use glGetString(GL_VERSION)
+//  instead of glGetIntegerv(GL_MAJOR_VERSION, ...) when the later returns zero
+//  (e.g. Desktop GL 2.x) 2020-09-17: OpenGL: Fix to avoid compiling/calling
 //  glBindSampler() on ES or pre 3.3 context which have the defines set by a
-//  loader. 2020-07-10: OpenGL: Added support for glad2 OpenGL loader. 2020-05-08:
-//  OpenGL: Made default GLSL version 150 (instead of 130) on OSX. 2020-04-21:
-//  OpenGL: Fixed handling of glClipControl(GL_UPPER_LEFT) by inverting
-//  projection matrix. 2020-04-12: OpenGL: Fixed context version check
+//  loader. 2020-07-10: OpenGL: Added support for glad2 OpenGL loader.
+//  2020-05-08: OpenGL: Made default GLSL version 150 (instead of 130) on OSX.
+//  2020-04-21: OpenGL: Fixed handling of glClipControl(GL_UPPER_LEFT) by
+//  inverting projection matrix. 2020-04-12: OpenGL: Fixed context version check
 //  mistakenly testing for 4.0+ instead of 3.2+ to enable
 //  ImGuiBackendFlags_RendererHasVtxOffset. 2020-03-24: OpenGL: Added support
 //  for glbinding 2.x OpenGL loader. 2020-01-07: OpenGL: Added support for
 //  glbinding 3.x OpenGL loader. 2019-10-25: OpenGL: Using a combination of GL
 //  define and runtime GL version to decide whether to use
-//  glDrawElementsBaseVertex(). Fix building with pre-3.2 GL loaders. 2019-09-22:
-//  OpenGL: Detect default GL loader using __has_include compiler facility.
-//  2019-09-16: OpenGL: Tweak initialization code to allow application calling
-//  ImGui_ImplOpenGL3_CreateFontsTexture() before the first NewFrame() call.
-//  2019-05-29: OpenGL: Desktop GL only: Added support for large mesh (64K+
-//  vertices), enable ImGuiBackendFlags_RendererHasVtxOffset flag. 2019-04-30:
-//  OpenGL: Added support for special ImDrawCallback_ResetRenderState callback
-//  to reset render state. 2019-03-29: OpenGL: Not calling glBindBuffer more
-//  than necessary in the render loop. 2019-03-15: OpenGL: Added a GL call +
-//  comments in ImGui_ImplOpenGL3_Init() to detect uninitialized GL function
-//  loaders early. 2019-03-03: OpenGL: Fix support for ES 2.0 (WebGL 1.0).
-//  2019-02-20: OpenGL: Fix for OSX not supporting OpenGL 4.5, we don't try to
-//  read GL_CLIP_ORIGIN even if defined by the headers/loader. 2019-02-11:
-//  OpenGL: Projecting clipping rectangles correctly using
-//  draw_data->FramebufferScale to allow multi-viewports for retina display.
-//  2019-02-01: OpenGL: Using GLSL 410 shaders for any version over 410 (e.g.
-//  430, 450). 2018-11-30: Misc: Setting up io.BackendRendererName so it can be
-//  displayed in the About Window. 2018-11-13: OpenGL: Support for GL 4.5's
-//  glClipControl(GL_UPPER_LEFT) / GL_CLIP_ORIGIN. 2018-08-29: OpenGL: Added
-//  support for more OpenGL loaders: glew and glad, with comments indicative
-//  that any loader can be used. 2018-08-09: OpenGL: Default to OpenGL ES 3 on
-//  iOS and Android. GLSL version default to "#version 300 ES". 2018-07-30:
-//  OpenGL: Support for GLSL 300 ES and 410 core. Fixes for Emscripten
-//  compilation. 2018-07-10: OpenGL: Support for more GLSL versions (based on
-//  the GLSL version string). Added error output when shaders fail to
-//  compile/link. 2018-06-08: Misc: Extracted imgui_impl_opengl3.cpp/.h away
-//  from the old combined GLFW/SDL+OpenGL3 examples. 2018-06-08: OpenGL: Use
-//  draw_data->DisplayPos and draw_data->DisplaySize to setup projection matrix
-//  and clipping rectangle. 2018-05-25: OpenGL: Removed unnecessary
-//  backup/restore of GL_ELEMENT_ARRAY_BUFFER_BINDING since this is part of the
-//  VAO state. 2018-05-14: OpenGL: Making the call to glBindSampler() optional
-//  so 3.2 context won't fail if the function is a nullptr pointer. 2018-03-06:
-//  OpenGL: Added const char* glsl_version parameter to ImGui_ImplOpenGL3_Init()
-//  so user can override the GLSL version e.g. "#version 150". 2018-02-23:
-//  OpenGL: Create the VAO in the render function so the setup can more easily
-//  be used with multiple shared GL context. 2018-02-16: Misc: Obsoleted the
+//  glDrawElementsBaseVertex(). Fix building with pre-3.2 GL loaders.
+//  2019-09-22: OpenGL: Detect default GL loader using __has_include compiler
+//  facility. 2019-09-16: OpenGL: Tweak initialization code to allow application
+//  calling ImGui_ImplOpenGL3_CreateFontsTexture() before the first NewFrame()
+//  call. 2019-05-29: OpenGL: Desktop GL only: Added support for large mesh
+//  (64K+ vertices), enable ImGuiBackendFlags_RendererHasVtxOffset flag.
+//  2019-04-30: OpenGL: Added support for special
+//  ImDrawCallback_ResetRenderState callback to reset render state. 2019-03-29:
+//  OpenGL: Not calling glBindBuffer more than necessary in the render loop.
+//  2019-03-15: OpenGL: Added a GL call + comments in ImGui_ImplOpenGL3_Init()
+//  to detect uninitialized GL function loaders early. 2019-03-03: OpenGL: Fix
+//  support for ES 2.0 (WebGL 1.0). 2019-02-20: OpenGL: Fix for OSX not
+//  supporting OpenGL 4.5, we don't try to read GL_CLIP_ORIGIN even if defined
+//  by the headers/loader. 2019-02-11: OpenGL: Projecting clipping rectangles
+//  correctly using draw_data->FramebufferScale to allow multi-viewports for
+//  retina display. 2019-02-01: OpenGL: Using GLSL 410 shaders for any version
+//  over 410 (e.g. 430, 450). 2018-11-30: Misc: Setting up
+//  io.BackendRendererName so it can be displayed in the About Window.
+//  2018-11-13: OpenGL: Support for GL 4.5's glClipControl(GL_UPPER_LEFT) /
+//  GL_CLIP_ORIGIN. 2018-08-29: OpenGL: Added support for more OpenGL loaders:
+//  glew and glad, with comments indicative that any loader can be used.
+//  2018-08-09: OpenGL: Default to OpenGL ES 3 on iOS and Android. GLSL version
+//  default to "#version 300 ES". 2018-07-30: OpenGL: Support for GLSL 300 ES
+//  and 410 core. Fixes for Emscripten compilation. 2018-07-10: OpenGL: Support
+//  for more GLSL versions (based on the GLSL version string). Added error
+//  output when shaders fail to compile/link. 2018-06-08: Misc: Extracted
+//  imgui_impl_opengl3.cpp/.h away from the old combined GLFW/SDL+OpenGL3
+//  examples. 2018-06-08: OpenGL: Use draw_data->DisplayPos and
+//  draw_data->DisplaySize to setup projection matrix and clipping rectangle.
+//  2018-05-25: OpenGL: Removed unnecessary backup/restore of
+//  GL_ELEMENT_ARRAY_BUFFER_BINDING since this is part of the VAO state.
+//  2018-05-14: OpenGL: Making the call to glBindSampler() optional so 3.2
+//  context won't fail if the function is a nullptr pointer. 2018-03-06: OpenGL:
+//  Added const char* glsl_version parameter to ImGui_ImplOpenGL3_Init() so user
+//  can override the GLSL version e.g. "#version 150". 2018-02-23: OpenGL:
+//  Create the VAO in the render function so the setup can more easily be used
+//  with multiple shared GL context. 2018-02-16: Misc: Obsoleted the
 //  io.RenderDrawListsFn callback and exposed ImGui_ImplSdlGL3_RenderDrawData()
 //  in the .h file so you can call it yourself. 2018-01-07: OpenGL: Changed GLSL
 //  shader version from 330 to 150. 2017-09-01: OpenGL: Save and restore current

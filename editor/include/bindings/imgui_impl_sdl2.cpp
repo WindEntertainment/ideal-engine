@@ -31,11 +31,12 @@
 //  (io.SetPlatformImeDataFn will call
 //  SDL_SetTextInputRect()/SDL_StartTextInput()). 2023-02-07: *BREAKING CHANGE*
 //  Renamed this backend file from imgui_impl_sdl.cpp/.h to
-//  imgui_impl_sdl2.cpp/.h in prevision for the future release of SDL3. 2023-02-02:
-//  Avoid calling SDL_SetCursor() when cursor has not changed, as the function
-//  is surprisingly costly on Mac with latest SDL (may be fixed in next SDL
-//  version). 2023-02-02: Added support for SDL 2.0.18+ preciseX/preciseY mouse
-//  wheel data for smooth scrolling + Scaling X value on Emscripten (bug?).
+//  imgui_impl_sdl2.cpp/.h in prevision for the future release of SDL3.
+//  2023-02-02: Avoid calling SDL_SetCursor() when cursor has not changed, as
+//  the function is surprisingly costly on Mac with latest SDL (may be fixed in
+//  next SDL version). 2023-02-02: Added support for SDL 2.0.18+
+//  preciseX/preciseY mouse wheel data for smooth scrolling + Scaling X value on
+//  Emscripten (bug?).
 //  (#4019, #6096) 2023-02-02: Removed SDL_MOUSEWHEEL value clamping, as values
 //  seem correct in latest Emscripten. (#4019) 2023-02-01: Flipping
 //  SDL_MOUSEWHEEL 'wheel.x' value to match other backends and offer consistent
@@ -80,23 +81,23 @@
 //  Fixed mapping for ImGuiKey_KeyPadEnter (using SDL_SCANCODE_KP_ENTER instead
 //  of SDL_SCANCODE_RETURN2). 2019-12-17: Inputs: On Wayland, use
 //  SDL_GetMouseState (because there is no global mouse state). 2019-12-05:
-//  Inputs: Added support for ImGuiMouseCursor_NotAllowed mouse cursor. 2019-07-21:
-//  Inputs: Added mapping for ImGuiKey_KeyPadEnter. 2019-04-23: Inputs: Added
-//  support for SDL_GameController (if ImGuiConfigFlags_NavEnableGamepad is set
-//  by user application). 2019-03-12: Misc: Preserve DisplayFramebufferScale
-//  when main window is minimized. 2018-12-21: Inputs: Workaround for
-//  Android/iOS which don't seem to handle focus related calls. 2018-11-30:
-//  Misc: Setting up io.BackendPlatformName so it can be displayed in the About
-//  Window. 2018-11-14: Changed the signature of ImGui_ImplSDL2_ProcessEvent()
-//  to take a 'const SDL_Event*'. 2018-08-01: Inputs: Workaround for Emscripten
-//  which doesn't seem to handle focus related calls. 2018-06-29: Inputs: Added
-//  support for the ImGuiMouseCursor_Hand cursor. 2018-06-08: Misc: Extracted
-//  imgui_impl_sdl.cpp/.h away from the old combined SDL2+OpenGL/Vulkan
-//  examples. 2018-06-08: Misc: ImGui_ImplSDL2_InitForOpenGL() now takes a
-//  SDL_GLContext parameter. 2018-05-09: Misc: Fixed clipboard paste memory leak
-//  (we didn't call SDL_FreeMemory on the data returned by
-//  SDL_GetClipboardText). 2018-03-20: Misc: Setup io.BackendFlags
-//  ImGuiBackendFlags_HasMouseCursors flag + honor
+//  Inputs: Added support for ImGuiMouseCursor_NotAllowed mouse cursor.
+//  2019-07-21: Inputs: Added mapping for ImGuiKey_KeyPadEnter. 2019-04-23:
+//  Inputs: Added support for SDL_GameController (if
+//  ImGuiConfigFlags_NavEnableGamepad is set by user application). 2019-03-12:
+//  Misc: Preserve DisplayFramebufferScale when main window is minimized.
+//  2018-12-21: Inputs: Workaround for Android/iOS which don't seem to handle
+//  focus related calls. 2018-11-30: Misc: Setting up io.BackendPlatformName so
+//  it can be displayed in the About Window. 2018-11-14: Changed the signature
+//  of ImGui_ImplSDL2_ProcessEvent() to take a 'const SDL_Event*'. 2018-08-01:
+//  Inputs: Workaround for Emscripten which doesn't seem to handle focus related
+//  calls. 2018-06-29: Inputs: Added support for the ImGuiMouseCursor_Hand
+//  cursor. 2018-06-08: Misc: Extracted imgui_impl_sdl.cpp/.h away from the old
+//  combined SDL2+OpenGL/Vulkan examples. 2018-06-08: Misc:
+//  ImGui_ImplSDL2_InitForOpenGL() now takes a SDL_GLContext parameter.
+//  2018-05-09: Misc: Fixed clipboard paste memory leak (we didn't call
+//  SDL_FreeMemory on the data returned by SDL_GetClipboardText). 2018-03-20:
+//  Misc: Setup io.BackendFlags ImGuiBackendFlags_HasMouseCursors flag + honor
 //  ImGuiConfigFlags_NoMouseCursorChange flag. 2018-02-16: Inputs: Added support
 //  for mouse cursors, honoring ImGui::GetMouseCursor() value. 2018-02-06: Misc:
 //  Removed call to ImGui::Shutdown() which is not available from 1.60 WIP, user
@@ -499,8 +500,8 @@ static bool ImGui_ImplSDL2_Init(SDL_Window *window, SDL_Renderer *renderer) {
 
   // From 2.0.5: Set SDL hint to receive mouse click events on window focus,
   // otherwise SDL doesn't emit the event. Without this, when clicking to gain
-  // focus, our widgets wouldn't activate even though they showed as hovered. (This
-  // is unfortunately a global SDL setting, so enabling it might have a
+  // focus, our widgets wouldn't activate even though they showed as hovered.
+  // (This is unfortunately a global SDL setting, so enabling it might have a
   // side-effect on your application. It is unlikely to make a difference, but
   // if your app absolutely needs to ignore the initial on-focus click: you can
   // ignore SDL_MOUSEBUTTONDOWN events coming right after a
