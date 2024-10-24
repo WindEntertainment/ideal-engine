@@ -40,6 +40,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: false
+          submodules: true
       - name: Env
         uses: './.github/workflows/utils/json-to-env'
         with:
@@ -73,6 +74,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: false
+          submodules: true
       - name: Env
         uses: './.github/workflows/utils/json-to-env'
         with:
@@ -134,6 +136,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: false
+          submodules: true
       - name: Env
         uses: './.github/workflows/utils/json-to-env'
         with:
@@ -207,6 +210,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: false
+          submodules: true
       - name: Env
         uses: './.github/workflows/utils/json-to-env'
         with:
