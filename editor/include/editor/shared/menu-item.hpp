@@ -9,7 +9,11 @@ namespace editor {
     class MenuItem {
     public:
       const std::string id;
-      MenuItem(const std::string id, Callback callback);
+      MenuItem(
+        const std::string id,
+        Callback callback,
+        const std::string shortcut = ""
+      );
       void render();
 
       bool operator==(const MenuItem &menuItem) const {
@@ -18,6 +22,7 @@ namespace editor {
 
     private:
       Callback callback;
+      const std::string shortcut;
     };
 
     struct MenuItemHash {

@@ -134,7 +134,8 @@ void RenderCellsTab() {
 int main(int, char **) {
   IGFD::FileDialogConfig chlen = {};
 
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
+      0) {
     printf("Error: %s\n", SDL_GetError());
     return -1;
   }
@@ -225,15 +226,25 @@ int main(int, char **) {
       "File",
       {
         MenuItem("Create", []() {}),
-        MenuItem("Open", []() {}),
-        MenuItem("Save", []() {}),
+        MenuItem(
+          "Open",
+          []() {
+            ImGuiFileDialog::Instance()->OpenDialog(
+              "ChooseFileDlgKey", "Choose Image", ".png,.jpg,.jpeg,.bmp", {}
+            );
+          },
+          "Ctrl+O"
+        ),
+        MenuItem(
+          "Save", []() {}, "Ctrl+S"
+        ),
         MenuItem("Save as..", []() {}),
       }
     ),
     Menu(
       "Cells",
       {
-        MenuItem("Auto", []() {}),
+        MenuItem("Auto", []() { showGridPopup = true; }),
       }
     ),
   });
@@ -268,7 +279,7 @@ int main(int, char **) {
 
     // if (ImGui::BeginMenuBar()) {
     //   if (ImGui::BeginMenu("Cells")) {
-    //     if (ImGui::MenuItem("Auto")) {
+    // if (ImGui::MenuItem("Auto")) {
     //       // if (ImGui::Button("Auto")) {
     //       showGridPopup = true; // Open the popup when "Auto" is clicked
     //       // }
