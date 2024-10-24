@@ -2,7 +2,7 @@
 #define WIND_PIPE_WRITE
 
 #include <utils/utils.hpp>
-#include <utils/yaml-utils.h>
+#include <utils/yaml-utils.hpp>
 
 #include <filesystem>
 #include <fstream>
