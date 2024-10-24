@@ -1,9 +1,9 @@
 #include <utils/utils.hpp>
 
 namespace wind {
-namespace assets {
+  namespace assets {
 
-static const char* c_cacheExtension = ".wind-asset-cache";
+    static const char *c_cacheExtension = ".wind-asset-cache";
 
-}
+  }
 } // namespace wind

@@ -3,8 +3,13 @@
 #include "utils/includes.hpp"
 
 namespace wind {
-Trigger::Trigger(std::string name, const Keys bindings, const Callbacks callbacks)
-    : name(name), bindings(bindings), callbacks(callbacks) {
-}
+  Trigger::Trigger(
+    std::string name,
+    const Keys bindings,
+    const Callbacks callbacks
+  )
+      : name(name)
+      , bindings(bindings)
+      , callbacks(callbacks) {}
 
 } // namespace wind
