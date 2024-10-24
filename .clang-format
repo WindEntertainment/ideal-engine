@@ -34,7 +34,7 @@ SortIncludes: false
 SpacesInContainerLiterals: false
 AllowShortIfStatementsOnASingleLine: false
 AlignAfterOpenBracket: BlockIndent
-BreakConstructorInitializersBeforeComma: true
+BreakConstructorInitializersBeforeComma: false
 AlwaysBreakBeforeMultilineStrings: false
 BreakBeforeBinaryOperators: None
 BinPackArguments: false
