@@ -1,0 +1,19 @@
+name: Lint native
+description: Lint native
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Format
+      uses: DoozyX/clang-format-lint-action@v0.17
+      with:
+        source: '.'
+        extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
+        clangFormatVersion: 20
+        inplace: true
+
+    # - name: Lint
+    #   uses: HorstBaerbel/action-clang-tidy@1.2
+    #   with:
+    #     scandir: './game'
+    #     extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'

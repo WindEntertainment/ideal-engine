@@ -5,7 +5,7 @@ runs:
   using: 'composite'
   steps:
     - name: Prepare native env
-      uses: ./.github/workflows/modules/game/setup-env
+      uses: ./.github/workflows/modules/engine/setup-env
 
     - name: Build native with wm
       if: env.wasm == 'false'
@@ -14,7 +14,7 @@ runs:
         export CC=${{ env.cc }}
         export CXX=${{ env.cxx }}
 
-        wm run cmake-build -bt ${{ env.conanBuildType }}
+        wm run cmake-build -bt ${{ env.conanBuildType }} -t all
 
     - name: Build native wasm with wm
       if: env.wasm == 'true'
@@ -27,4 +27,4 @@ runs:
           source "/home/runner/work/ideal-engine/ideal-engine/emsdk/emsdk_env.sh"
         fi
 
-        wm run cmake-build -bt ${{ env.conanBuildType }} -w
+        wm run cmake-build -bt ${{ env.conanBuildType }} -w -t all
