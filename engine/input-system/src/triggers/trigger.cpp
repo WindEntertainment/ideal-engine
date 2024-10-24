@@ -8,8 +8,6 @@ namespace wind {
     const Keys bindings,
     const Callbacks callbacks
   )
-      : name(name)
-      , bindings(bindings)
-      , callbacks(callbacks) {}
+      : name(name), bindings(bindings), callbacks(callbacks) {}
 
 } // namespace wind

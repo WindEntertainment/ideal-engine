@@ -83,8 +83,7 @@ namespace wind {
 
   class Stopwatch {
   public:
-    Stopwatch(const std::string &message)
-        : message(message) {
+    Stopwatch(const std::string &message) : message(message) {
       start_time = std::chrono::high_resolution_clock::now();
     }
 

@@ -21,8 +21,7 @@ namespace wind {
     public:
       std::ifstream m_file;
 
-      Bundle(std::ifstream &&_file)
-          : m_file(std::move(_file)) {
+      Bundle(std::ifstream &&_file) : m_file(std::move(_file)) {
         m_file.seekg(0, std::ios::end);
         m_fileSize = m_file.tellg();
         m_file.seekg(0, std::ios::beg);

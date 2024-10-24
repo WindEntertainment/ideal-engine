@@ -3,8 +3,7 @@
 namespace editor {
   namespace components {
     Menu::Menu(const std::string id, MenuItems menuItems)
-        : id(id)
-        , menuItems(menuItems) {}
+        : id(id), menuItems(menuItems) {}
 
     void Menu::render() {
       if (ImGui::BeginMenu(id.c_str())) {

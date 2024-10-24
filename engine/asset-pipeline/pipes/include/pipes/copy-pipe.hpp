@@ -30,8 +30,7 @@ namespace wind {
         return nullptr;
       }
 
-      CopyPipe()
-          : AssetPipe("copy"){};
+      CopyPipe() : AssetPipe("copy"){};
     };
 
   } // namespace assets

@@ -2,8 +2,7 @@
 
 namespace editor {
   namespace components {
-    MenuBar::MenuBar(Menus menus)
-        : menus(menus) {}
+    MenuBar::MenuBar(Menus menus) : menus(menus) {}
 
     void MenuBar::render() {
       if (ImGui::BeginMenuBar()) {

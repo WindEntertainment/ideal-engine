@@ -116,8 +116,7 @@ namespace wind {
 
       void *load(std::ifstream &file) override { return nullptr; }
 
-      ShaderPipe()
-          : AssetPipe("shader"){};
+      ShaderPipe() : AssetPipe("shader"){};
     };
 
   } // namespace assets

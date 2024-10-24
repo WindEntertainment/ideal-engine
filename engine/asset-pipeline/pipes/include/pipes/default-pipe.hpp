@@ -95,8 +95,7 @@ namespace wind {
         return (void *)(unzipData);
       }
 
-      DefaultPipe()
-          : AssetPipe("default"){};
+      DefaultPipe() : AssetPipe("default"){};
     };
 
   } // namespace assets

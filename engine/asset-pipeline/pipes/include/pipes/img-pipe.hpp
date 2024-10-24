@@ -95,8 +95,7 @@ namespace wind {
         return (void *)(new Image{unzipData, glm::ivec2{width, height}});
       }
 
-      ImagePipe()
-          : AssetPipe("image"){};
+      ImagePipe() : AssetPipe("image"){};
     };
 
   } // namespace assets
