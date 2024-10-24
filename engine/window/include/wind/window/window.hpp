@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/utils.hpp"
+#include "wind/utils/utils.hpp"
 #include <SDL2/SDL.h>
 
 namespace wind {
@@ -10,6 +10,9 @@ public:
   struct Config;
 
 public:
+
+  ~Window();
+
   // setters
   void setTitle(const char* title);
   void setSize(glm::ivec2 size);

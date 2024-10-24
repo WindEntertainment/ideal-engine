@@ -1,4 +1,4 @@
-#include "window/window.hpp"
+#include "wind/window/window.hpp"
 
 namespace wind {
 
@@ -12,15 +12,6 @@ static timepoint m_perSecond;
 //===========================================//
 // Lifecycle
 bool Window::create(Config config) {
-  if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-    spdlog::error("Failed initialization SDL: {}", SDL_GetError());
-    return false;
-  }
-
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
   m_window = SDL_CreateWindow(
     config.title.c_str(),
     config.position.x,
@@ -37,6 +28,10 @@ bool Window::create(Config config) {
   m_alive = true;
   m_title = config.title.c_str();
   setVisibleCursor(config.visibleCursor);
+}
+
+Window::~Window() {
+  close();
 }
 
 std::shared_ptr<Window> Window::create(void (*buildConfig)(Config*)) {
