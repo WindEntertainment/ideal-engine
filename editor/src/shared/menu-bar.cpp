@@ -1,18 +1,17 @@
 #include <editor/shared/menu-bar.hpp>
 
 namespace editor {
-namespace components {
-MenuBar::MenuBar(std::unordered_set<Menu> menus)
-    : menus(menus) {
-}
+  namespace components {
+    MenuBar::MenuBar(Menus menus)
+        : menus(menus) {}
 
-void MenuBar::render() {
-  if (ImGui::BeginMenuBar()) {
-    for (auto menuItem : menus) {
-      menuItem.render();
+    void MenuBar::render() {
+      if (ImGui::BeginMenuBar()) {
+        for (auto menuItem : menus) {
+          menuItem.render();
+        }
+        ImGui::EndMenuBar();
+      }
     }
-    ImGui::EndMenuBar();
-  }
-}
-} // namespace components
+  } // namespace components
 } // namespace editor

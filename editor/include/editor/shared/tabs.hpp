@@ -3,12 +3,12 @@
 #include <utils/utils.hpp>
 
 namespace editor {
-namespace components {
-class Tabs {
-public:
-  std::string id;
+  namespace components {
+    class Tabs {
+    public:
+      const std::string id;
 
-private:
-};
-} // namespace components
+    private:
+    };
+  } // namespace components
 } // namespace editor
