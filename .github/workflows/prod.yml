@@ -45,7 +45,7 @@ jobs:
         uses: './.github/workflows/utils/json-to-env'
         with:
           json: ${{ toJSON(matrix.config) }}
-      - name: Game
+      - name: Engine
         uses: './.github/workflows/modules/engine/lint'
       - name: Linting commit
         uses: './.github/workflows/utils/commit'
@@ -142,7 +142,7 @@ jobs:
         with:
           json: ${{ toJSON(matrix.config) }}
       - uses: ./.github/workflows/utils/setup-base-libs
-      - name: Game
+      - name: Engine
         uses: './.github/workflows/modules/engine/build'
       - name: Cpack build
         shell: bash
@@ -216,5 +216,5 @@ jobs:
         with:
           json: ${{ toJSON(matrix.config) }}
       - uses: ./.github/workflows/utils/setup-base-libs
-      - name: Game
+      - name: Engine
         uses: './.github/workflows/modules/engine/build'
